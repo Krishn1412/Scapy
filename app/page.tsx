@@ -1,5 +1,6 @@
 import Image from "next/image"
 import Searchbar from "@/components/Searchbar"
+import HeroCarousel from "@/components/HeroCarousel"
 const Home = () => {
   return (
     <>
@@ -19,7 +20,7 @@ const Home = () => {
             </p>
             <Searchbar/>
           </div>
-          Hero Carousel
+          <HeroCarousel/>
         </div>
       </section>
       <section className="trending-sections">
