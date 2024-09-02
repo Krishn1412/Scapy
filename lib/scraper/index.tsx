@@ -1,5 +1,7 @@
 import axios from 'axios'
 import * as cheerio from 'cheerio'
+import { extractPrice } from '../utils';
+import { Original_Surfer } from 'next/font/google';
 
 export async function scrapeAmazonProduct(url: string){
     if(!url) return;
@@ -25,8 +27,21 @@ export async function scrapeAmazonProduct(url: string){
         const $ = cheerio.load(response.data)
 
         const title = $('#productTitle').text().trim()
-        const currentPrice = extractPrice()
-        console.log(title)
+        const currentPrice = extractPrice(
+            $('.priceToPay span.a-price-whole'),
+            $('a.size.base.a-color-price'),
+            $('.a-button-selected .a-color-base')
+        )
+        const originalPrice = extractPrice(
+            $('#priceblock-outprice'),
+            $('.a-price.a-text-price span.a-offscreen'),
+            $('#listprice'),
+            $('#priceblock-dealprice'),
+            $('.a-size-base.a-color-price')
+        )
+        const outOfStock = $('availability span').text().trim().toLocaleLowerCase() === 'currently unavailable'
+        const image = $('#imgBlkFront').attr('data-a-dynamic-image') || $('#landingImage').attr('data-a-dynamic-image')
+        console.log({title, currentPrice, originalPrice})
     
     } catch (error:any) {
         throw new Error(`Failed to scrape product ${error.message}`)
